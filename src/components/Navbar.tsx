@@ -44,10 +44,18 @@ export default function Navbar({ hasAnnouncement = false }: NavbarProps) {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [announcementVisible, setAnnouncementVisible] = useState(hasAnnouncement);
 
+  // Calculate dynamic top position
+  // If we haven't scrolled at all (scrollY === 0) AND the announcement is visible, stay below it
+  // As soon as we scroll even 1px, we stick to the top (0)
+  const [isAtTop, setIsAtTop] = useState(true);
+
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    const handleScroll = () => {
+      setIsAtTop(window.scrollY === 0);
+      setScrolled(window.scrollY > 60);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // When user dismisses the announcement bar, remove the offset
@@ -60,15 +68,16 @@ export default function Navbar({ hasAnnouncement = false }: NavbarProps) {
     return () => observer.disconnect();
   }, []);
 
+  const topPosition = (isAtTop && announcementVisible) ? '36px' : '0';
+
   return (
     <>
       <motion.header
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
+        style={{ top: topPosition }}
         className={`fixed inset-x-0 z-50 transition-all duration-300 ${
-          announcementVisible ? 'top-8' : 'top-0'
-        } ${
           scrolled
             ? 'bg-white/95 backdrop-blur-md shadow-md py-3'
             : 'bg-transparent py-5'

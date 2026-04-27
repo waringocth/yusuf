@@ -17,7 +17,7 @@ export default function AnnouncementBar({ text, bgColor, textColor }: Announceme
   return (
     <div
       id="announcement-bar"
-      className="relative w-full z-[70] flex items-center justify-center px-10 py-2 text-center"
+      className="relative w-full z-40 flex items-center justify-center px-10 py-2 text-center"
       style={{ backgroundColor: bgColor, color: textColor }}
     >
       <p className="text-xs sm:text-sm font-medium font-sans">
