@@ -34,19 +34,15 @@ export async function createInquiry(data: {
     
     console.log('Inquiry created in DB successfully:', inquiry.id);
 
-    // Determine the admin email. Fallback to a hardcoded one if not found in db.
-    const adminUser = await prisma.adminUser.findFirst();
-    const adminEmail = adminUser?.email || 'yigitcankerimbusiness@gmail.com';
-    console.log('Preparing to send email to:', adminEmail);
-
-    // Determine tour title from input, not from DB relation
+    const adminEmail = 'yigitcankerimbusiness@gmail.com';
     const tourTitle = (data.tourId && !isNaN(Number(data.tourId)))
       ? `Tur #${data.tourId}`
       : 'Genel İletişim Formu';
 
-    // Send email notification using Resend
+    console.log('Sending email to:', adminEmail);
+
     const resendResponse = await resend.emails.send({
-      from: 'Kılınç Turizm Bildirim <onboarding@resend.dev>',
+      from: 'Kılınç Turizm <onboarding@resend.dev>',
       to: adminEmail,
       subject: `Yeni Talep: ${tourTitle}`,
       html: `
