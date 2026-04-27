@@ -31,9 +31,6 @@ export async function createInquiry(data: {
 
     const inquiry = await prisma.inquiry.create({
       data: inquiryData,
-      include: {
-        tour: true,
-      },
     });
     
     console.log('Inquiry created in DB successfully:', inquiry.id);
@@ -43,7 +40,10 @@ export async function createInquiry(data: {
     const adminEmail = adminUser?.email || 'yigitcankerimbusiness@gmail.com';
     console.log('Preparing to send email to:', adminEmail);
 
-    const tourTitle = inquiry.tour ? inquiry.tour.title : 'Genel İletişim Formu';
+    // Determine tour title from input, not from DB relation
+    const tourTitle = (data.tourId && !isNaN(Number(data.tourId)))
+      ? `Tur #${data.tourId}`
+      : 'Genel İletişim Formu';
 
     // Send email notification using Resend
     const resendResponse = await resend.emails.send({
