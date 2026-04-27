@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Map, Settings, LogOut, MessageSquare } from 'lucide-react';
+import { LayoutDashboard, Map, Settings, LogOut, MessageSquare, Megaphone } from 'lucide-react';
 
 export default function AdminSidebar() {
   const pathname = usePathname();
@@ -11,6 +11,7 @@ export default function AdminSidebar() {
     { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/admin/programs', label: 'Programlar', icon: Map },
     { href: '/admin/talepler', label: 'Talepler', icon: MessageSquare },
+    { href: '/admin/duyuru', label: 'Duyuru Bandı', icon: Megaphone },
     { href: '/admin/ayarlar', label: 'Pazarlama Ayarları', icon: Settings },
   ];
 

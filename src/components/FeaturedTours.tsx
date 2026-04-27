@@ -169,7 +169,7 @@ export default function FeaturedTours({ initialTours = [] }: { initialTours?: To
 
                   {/* Body */}
                   <div className="flex flex-col flex-1 p-6">
-                    <h3 className="font-display text-lg font-bold text-slate-900 leading-snug mb-3 group-hover:text-brand-700 transition-colors">
+                    <h3 className="card-title text-lg mb-3 group-hover:text-brand-700 transition-colors">
                       {tour.title}
                     </h3>
 

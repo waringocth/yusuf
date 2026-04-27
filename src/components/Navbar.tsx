@@ -34,15 +34,30 @@ const navLinks = [
   { label: 'İletişim', href: '#iletisim' },
 ];
 
-export default function Navbar() {
+interface NavbarProps {
+  hasAnnouncement?: boolean;
+}
+
+export default function Navbar({ hasAnnouncement = false }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [announcementVisible, setAnnouncementVisible] = useState(hasAnnouncement);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  // When user dismisses the announcement bar, remove the offset
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      const bar = document.getElementById('announcement-bar');
+      setAnnouncementVisible(!!bar);
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
   }, []);
 
   return (
@@ -51,7 +66,9 @@ export default function Navbar() {
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
+        className={`fixed inset-x-0 z-50 transition-all duration-300 ${
+          announcementVisible ? 'top-8' : 'top-0'
+        } ${
           scrolled
             ? 'bg-white/95 backdrop-blur-md shadow-md py-3'
             : 'bg-transparent py-5'

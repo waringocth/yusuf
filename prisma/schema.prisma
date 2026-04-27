@@ -63,6 +63,15 @@ model Settings {
   description String?
 }
 
+model Announcement {
+  id        Int      @id @default(autoincrement())
+  text      String
+  isActive  Boolean  @default(true)
+  bgColor   String   @default("#1d5dd5")
+  textColor String   @default("#ffffff")
+  updatedAt DateTime @updatedAt
+}
+
 model AdminUser {
   id        Int      @id @default(autoincrement())
   email     String   @unique
