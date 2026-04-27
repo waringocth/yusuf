@@ -11,7 +11,7 @@ export default function AdminSidebar() {
     { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/admin/programs', label: 'Programlar', icon: Map },
     { href: '/admin/talepler', label: 'Talepler', icon: MessageSquare },
-    { href: '/admin/settings', label: 'Ayarlar', icon: Settings },
+    { href: '/admin/ayarlar', label: 'Pazarlama Ayarları', icon: Settings },
   ];
 
   return (

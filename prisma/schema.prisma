@@ -56,6 +56,13 @@ model Inquiry {
   updatedAt DateTime      @updatedAt
 }
 
+model Settings {
+  id          Int     @id @default(autoincrement())
+  key         String  @unique
+  value       String  @default("")
+  description String?
+}
+
 model AdminUser {
   id        Int      @id @default(autoincrement())
   email     String   @unique
