@@ -3,6 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Edit, Eye, Plus } from 'lucide-react';
 
+type Tour = Awaited<ReturnType<typeof getTours>>[number];
+
 export default async function AdminProgramsPage() {
   const tours = await getTours();
 
@@ -33,7 +35,7 @@ export default async function AdminProgramsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
-              {tours.map((tour) => (
+              {tours.map((tour: Tour) => (
                 <tr key={tour.id} className="hover:bg-slate-50/50 transition-colors">
                   <td className="px-6 py-4">
                     <div className="relative w-16 h-12 rounded-lg overflow-hidden bg-slate-100">

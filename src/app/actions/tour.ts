@@ -1,9 +1,9 @@
 'use server';
 
-import prisma from '../../lib/prisma';
+import prisma from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 
-import { tours as mockTours } from '../../data/tours';
+import { tours as mockTours } from '@/data/tours';
 
 export async function getTours() {
   try {
