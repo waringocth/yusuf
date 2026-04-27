@@ -14,25 +14,30 @@ export async function createInquiry(data: {
   message?: string;
 }) {
   try {
+    console.log('Starting createInquiry with data:', data);
+
     const inquiry = await prisma.inquiry.create({
       data: {
         tourId: data.tourId,
         name: data.name,
         phone: data.phone,
-        email: data.email,
-        message: data.message,
+        email: data.email || null,
+        message: data.message || null,
       },
       include: {
         tour: true,
       },
     });
+    
+    console.log('Inquiry created in DB successfully:', inquiry.id);
 
     // Determine the admin email. Fallback to a hardcoded one if not found in db.
     const adminUser = await prisma.adminUser.findFirst();
     const adminEmail = adminUser?.email || 'yigitcankerimbusiness@gmail.com';
+    console.log('Preparing to send email to:', adminEmail);
 
     // Send email notification using Resend
-    await resend.emails.send({
+    const resendResponse = await resend.emails.send({
       from: 'Kılınç Turizm Bildirim <onboarding@resend.dev>',
       to: adminEmail,
       subject: `Yeni Talep: ${inquiry.tour.title}`,
@@ -51,10 +56,18 @@ export async function createInquiry(data: {
       `,
     });
 
+    if (resendResponse.error) {
+      console.error('Resend API Error:', resendResponse.error);
+      // We still return success: true because the lead was saved to DB, 
+      // but maybe we want to inform the user or just log it.
+    } else {
+      console.log('Resend email sent successfully:', resendResponse.data);
+    }
+
     return { success: true };
-  } catch (error) {
-    console.error('Failed to create inquiry:', error);
-    return { success: false, error: 'Talebiniz alınırken bir hata oluştu. Lütfen telefon ile ulaşın.' };
+  } catch (error: any) {
+    console.error('Failed to create inquiry. Full error:', error);
+    return { success: false, error: error.message || 'Talebiniz alınırken bir hata oluştu. Lütfen telefon ile ulaşın.' };
   }
 }
 

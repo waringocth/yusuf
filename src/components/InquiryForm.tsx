@@ -26,15 +26,21 @@ export default function InquiryForm({ tourId }: InquiryFormProps) {
     setIsSubmitting(true);
     setError('');
 
-    const res = await createInquiry({
-      tourId,
-      ...formData,
-    });
+    try {
+      const res = await createInquiry({
+        tourId,
+        ...formData,
+      });
 
-    if (res.success) {
-      setIsSuccess(true);
-    } else {
-      setError(res.error || 'Bir hata oluştu.');
+      if (res.success) {
+        setIsSuccess(true);
+      } else {
+        setError(res.error || 'Bir hata oluştu.');
+      }
+    } catch (err: any) {
+      console.error('Action call failed:', err);
+      setError(err.message || 'Sunucuya bağlanılamadı.');
+    } finally {
       setIsSubmitting(false);
     }
   };
