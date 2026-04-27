@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Clock, Calendar, Users, ArrowRight, Flame } from 'lucide-react';
 import { tours } from '../data/tours';
@@ -173,15 +174,16 @@ export default function FeaturedTours() {
                         {tour.currency}{tour.price}
                       </p>
                     </div>
-                    <motion.a
-                      href="#iletisim"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="flex items-center gap-1.5 bg-brand-700 hover:bg-brand-800 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
-                    >
-                      Bilgi Al
-                      <ArrowRight className="w-4 h-4" />
-                    </motion.a>
+                    <Link href={`/program/${tour.slug}`} passHref legacyBehavior>
+                      <motion.a
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="flex items-center gap-1.5 bg-brand-700 hover:bg-brand-800 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors"
+                      >
+                        Bilgi Al
+                        <ArrowRight className="w-4 h-4" />
+                      </motion.a>
+                    </Link>
                   </div>
                 </div>
               </motion.article>
