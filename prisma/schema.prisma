@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model Tour {
+  id             Int      @id @default(autoincrement())
+  slug           String   @unique
+  title          String
+  category       String
+  badge          String?
+  duration       String
+  date           String
+  price          String
+  currency       String
+  seats          Int
+  rating         Float
+  image          String
+  description    String   @db.Text
+  
+  // JSON arrays for dynamic nested data
+  included       Json
+  excluded       Json
+  importantNotes Json
+  highlights     Json
+  itinerary      Json
+  hotels         Json
+  
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}

@@ -8,15 +8,18 @@ import Testimonials from '@/components/Testimonials';
 import LeadForm from '@/components/LeadForm';
 import Footer from '@/components/Footer';
 import StickyContact from '@/components/StickyContact';
+import { getTours } from './actions/tour';
 
-export default function HomePage() {
+export default async function HomePage() {
+  const tours = await getTours();
+
   return (
     <>
       <Navbar />
       <main>
         <Hero />
         <TourCategories />
-        <FeaturedTours />
+        <FeaturedTours initialTours={tours as any} />
         <ServicesSection />
         <StatsSection />
         <Testimonials />

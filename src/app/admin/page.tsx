@@ -1,7 +1,9 @@
-import { tours } from '../../data/tours';
+import { getTours } from '../actions/tour';
 import { Map, Users, Star, TrendingUp } from 'lucide-react';
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
+  const tours = await getTours();
+  
   const totalTours = tours.length;
   const umreTours = tours.filter(t => t.category === 'umre').length;
   const hacTours = tours.filter(t => t.category === 'hac').length;

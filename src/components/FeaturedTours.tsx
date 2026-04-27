@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Star, Clock, Calendar, Users, ArrowRight, Flame } from 'lucide-react';
-import { tours } from '../data/tours';
+import { Tour } from '../data/tours';
 
 type FilterKey = 'tumu' | 'umre' | 'hac' | 'yurtici' | 'yurtdisi' | 'balkan';
 
@@ -26,12 +26,12 @@ const badgeColor: Record<string, string> = {
   'Popüler': 'bg-violet-500',
 };
 
-export default function FeaturedTours() {
+export default function FeaturedTours({ initialTours = [] }: { initialTours?: Tour[] }) {
   const [activeFilter, setActiveFilter] = useState<FilterKey>('tumu');
 
   const filtered = activeFilter === 'tumu'
-    ? tours
-    : tours.filter((t) => t.category === activeFilter);
+    ? initialTours
+    : initialTours.filter((t) => t.category === activeFilter);
 
   return (
     <section id="turlar" className="py-20 bg-white">

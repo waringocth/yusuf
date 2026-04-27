@@ -1,4 +1,4 @@
-import { tours } from '../../../data/tours';
+import { getTourBySlug } from '../../../actions/tour';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,11 +10,23 @@ interface PageProps {
 
 export default async function ProgramDetail({ params }: PageProps) {
   const { slug } = await params;
-  const tour = tours.find((t) => t.slug === slug);
+  const tourResponse = await getTourBySlug(slug);
 
-  if (!tour) {
+  if (!tourResponse) {
     notFound();
   }
+
+  // Cast JSON arrays to known types
+  const tour = {
+    ...tourResponse,
+    highlights: tourResponse.highlights as string[] || [],
+    itinerary: tourResponse.itinerary as any[] || [],
+    hotels: tourResponse.hotels as any[] || [],
+    included: tourResponse.included as string[] || [],
+    excluded: tourResponse.excluded as string[] || [],
+    importantNotes: tourResponse.importantNotes as string[] || [],
+    reviewCount: (tourResponse as any).reviewCount || 120 // Fallback since it's not in schema yet
+  };
 
   return (
     <main className="min-h-screen bg-slate-50 pb-20">

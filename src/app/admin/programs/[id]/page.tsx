@@ -1,4 +1,4 @@
-import { tours } from '../../../../data/tours';
+import { getTourById } from '../../../../actions/tour';
 import { notFound } from 'next/navigation';
 import EditProgramForm from '../../../../components/admin/EditProgramForm';
 import Link from 'next/link';
@@ -10,11 +10,22 @@ interface PageProps {
 
 export default async function EditProgramPage({ params }: PageProps) {
   const { id } = await params;
-  const tour = tours.find((t) => t.id === parseInt(id, 10));
+  const tourResponse = await getTourById(parseInt(id, 10));
 
-  if (!tour) {
+  if (!tourResponse) {
     notFound();
   }
+
+  // Cast JSON arrays to known types for the Edit Form
+  const tour = {
+    ...tourResponse,
+    highlights: tourResponse.highlights as string[] || [],
+    itinerary: tourResponse.itinerary as any[] || [],
+    hotels: tourResponse.hotels as any[] || [],
+    included: tourResponse.included as string[] || [],
+    excluded: tourResponse.excluded as string[] || [],
+    importantNotes: tourResponse.importantNotes as string[] || [],
+  };
 
   return (
     <div className="max-w-5xl mx-auto">

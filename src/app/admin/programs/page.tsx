@@ -1,9 +1,11 @@
-import { tours } from '../../../data/tours';
+import { getTours } from '../../actions/tour';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Edit, Eye, Plus } from 'lucide-react';
 
-export default function AdminProgramsPage() {
+export default async function AdminProgramsPage() {
+  const tours = await getTours();
+
   return (
     <div>
       <div className="flex items-center justify-between mb-8">

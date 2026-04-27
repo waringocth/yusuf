@@ -8,6 +8,8 @@ interface EditProgramFormProps {
   initialData: Tour;
 }
 
+import { updateTour } from '../../../app/actions/tour';
+
 export default function EditProgramForm({ initialData }: EditProgramFormProps) {
   const [formData, setFormData] = useState<Tour>({
     ...initialData,
@@ -19,12 +21,22 @@ export default function EditProgramForm({ initialData }: EditProgramFormProps) {
     importantNotes: initialData.importantNotes || [],
   });
   const [isSaved, setIsSaved] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Simulated Save Action:', formData);
-    setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 3000);
+    setIsSaving(true);
+    
+    // Call server action
+    const result = await updateTour(formData.id, formData);
+    
+    setIsSaving(false);
+    if (result.success) {
+      setIsSaved(true);
+      setTimeout(() => setIsSaved(false), 3000);
+    } else {
+      alert(result.error);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -342,9 +354,13 @@ export default function EditProgramForm({ initialData }: EditProgramFormProps) {
 
       {/* SUBMIT BUTTON */}
       <div className="sticky bottom-0 p-6 bg-white border-t border-slate-200 flex items-center justify-end gap-4 rounded-3xl shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)]">
-        <button type="submit" className="flex items-center gap-2 bg-brand-700 hover:bg-brand-800 text-white font-semibold px-10 py-4 rounded-xl shadow-lg shadow-brand-700/20 transition-all hover:-translate-y-0.5">
+        <button 
+          type="submit" 
+          disabled={isSaving}
+          className="flex items-center gap-2 bg-brand-700 hover:bg-brand-800 text-white font-semibold px-10 py-4 rounded-xl shadow-lg shadow-brand-700/20 transition-all hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:-translate-y-0"
+        >
           <Save className="w-5 h-5" />
-          Değişiklikleri Kaydet
+          {isSaving ? 'Kaydediliyor...' : 'Değişiklikleri Kaydet'}
         </button>
       </div>
 
