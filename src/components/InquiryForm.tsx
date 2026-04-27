@@ -50,7 +50,7 @@ export default function InquiryForm({ tourId }: InquiryFormProps) {
       <h3 className="font-display text-2xl font-bold text-slate-900 mb-6 text-center">
         Hemen Bilgi Alın
       </h3>
-      
+
       <AnimatePresence mode="wait">
         {isSuccess ? (
           <motion.div

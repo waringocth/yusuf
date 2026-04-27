@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import type { Variants } from 'framer-motion';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ChevronDown, MapPin, Calendar, Users, ArrowRight, ShieldCheck, Star, Award } from 'lucide-react';
 
 import { useRouter } from 'next/navigation';
@@ -41,6 +41,11 @@ const trustBadges = [
   { icon: Award, label: '33 Yıllık Deneyim', color: 'text-blue-600' },
 ];
 
+const heroImages = [
+  'https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?q=85&w=2000&auto=format&fit=crop',
+  '/kabe.png'
+];
+
 const containerVariants: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.12 } },
@@ -56,11 +61,19 @@ export default function Hero() {
   const [destination, setDestination] = useState('');
   const [month, setMonth] = useState('');
   const [persons, setPersons] = useState('');
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 6000); // Change image every 6 seconds
+    return () => clearInterval(timer);
+  }, []);
 
   const handleSearch = (e: React.MouseEvent) => {
     e.preventDefault();
     const params = new URLSearchParams();
-    
+
     if (destination && destinationMap[destination]) {
       params.set('category', destinationMap[destination]);
     }
@@ -70,7 +83,7 @@ export default function Hero() {
     if (persons) {
       params.set('pax', persons);
     }
-    
+
     const queryString = params.toString();
     const url = queryString ? `/?${queryString}#turlar` : '/#turlar';
     router.push(url);
@@ -78,20 +91,32 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-screen flex flex-col justify-end pb-32 sm:pb-24 overflow-visible">
-      {/* Background Image */}
-      <div className="absolute inset-0">
-        <Image
-          src="https://images.unsplash.com/photo-1591604129939-f1efa4d9f7fa?q=85&w=2000&auto=format&fit=crop"
-          alt="Mekke'deki Kabe"
-          fill
-          className="object-cover object-center"
-          priority
-          sizes="100vw"
-        />
+      {/* Background Images with Crossfade */}
+      <div className="absolute inset-0 overflow-hidden">
+        <AnimatePresence initial={false}>
+          <motion.div
+            key={currentImageIndex}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5, ease: 'easeInOut' }}
+            className="absolute inset-0"
+          >
+            <Image
+              src={heroImages[currentImageIndex]}
+              alt="Kılınç Turizm Hero"
+              fill
+              className="object-cover object-center"
+              priority
+              sizes="100vw"
+            />
+          </motion.div>
+        </AnimatePresence>
+        
         {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-950/70 via-brand-900/60 to-brand-950/80" />
+        <div className="absolute inset-0 bg-gradient-to-b from-brand-950/70 via-brand-900/60 to-brand-950/80 z-10" />
         {/* Subtle texture */}
-        <div className="absolute inset-0 bg-gradient-to-r from-brand-950/40 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-950/40 via-transparent to-transparent z-10" />
       </div>
 
       {/* Content */}
@@ -199,7 +224,7 @@ export default function Hero() {
                     className="w-full text-xs sm:text-sm font-medium text-slate-700 bg-transparent appearance-none outline-none cursor-pointer pr-4"
                   >
                     <option value="">...</option>
-                    {[1,2,3,4,5,6,7,8,9,10].map((n) => (
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
                       <option key={n} value={n}>{n}</option>
                     ))}
                   </select>
