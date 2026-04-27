@@ -8,7 +8,7 @@ interface EditProgramFormProps {
   initialData: Tour;
 }
 
-import { updateTour } from '../../../app/actions/tour';
+import { updateTour } from '@/app/actions/tour';
 
 export default function EditProgramForm({ initialData }: EditProgramFormProps) {
   const [formData, setFormData] = useState<Tour>({

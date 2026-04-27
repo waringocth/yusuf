@@ -1,4 +1,4 @@
-import { getTours } from '../../actions/tour';
+import { getTours } from '@/app/actions/tour';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Edit, Eye, Plus } from 'lucide-react';

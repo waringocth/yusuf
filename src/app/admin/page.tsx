@@ -1,4 +1,4 @@
-import { getTours } from '../actions/tour';
+import { getTours } from '@/app/actions/tour';
 import { Map, Users, Star, TrendingUp } from 'lucide-react';
 
 export default async function AdminDashboard() {

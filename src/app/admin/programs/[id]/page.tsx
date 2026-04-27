@@ -1,4 +1,4 @@
-import { getTourById } from '../../../../actions/tour';
+import { getTourById } from '@/app/actions/tour';
 import { notFound } from 'next/navigation';
 import EditProgramForm from '../../../../components/admin/EditProgramForm';
 import Link from 'next/link';

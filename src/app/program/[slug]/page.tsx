@@ -1,4 +1,4 @@
-import { getTourBySlug } from '../../../actions/tour';
+import { getTourBySlug } from '@/app/actions/tour';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';

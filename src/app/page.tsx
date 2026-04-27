@@ -8,7 +8,7 @@ import Testimonials from '@/components/Testimonials';
 import LeadForm from '@/components/LeadForm';
 import Footer from '@/components/Footer';
 import StickyContact from '@/components/StickyContact';
-import { getTours } from './actions/tour';
+import { getTours } from '@/app/actions/tour';
 
 export default async function HomePage() {
   const tours = await getTours();
