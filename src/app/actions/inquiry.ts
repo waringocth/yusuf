@@ -7,7 +7,7 @@ import { revalidatePath } from 'next/cache';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function createInquiry(data: {
-  tourId: number;
+  tourId?: number;
   name: string;
   phone: string;
   email?: string;
@@ -18,7 +18,7 @@ export async function createInquiry(data: {
 
     const inquiry = await prisma.inquiry.create({
       data: {
-        tourId: data.tourId,
+        tourId: data.tourId || null,
         name: data.name,
         phone: data.phone,
         email: data.email || null,
@@ -36,15 +36,17 @@ export async function createInquiry(data: {
     const adminEmail = adminUser?.email || 'yigitcankerimbusiness@gmail.com';
     console.log('Preparing to send email to:', adminEmail);
 
+    const tourTitle = inquiry.tour ? inquiry.tour.title : 'Genel İletişim Formu';
+
     // Send email notification using Resend
     const resendResponse = await resend.emails.send({
       from: 'Kılınç Turizm Bildirim <onboarding@resend.dev>',
       to: adminEmail,
-      subject: `Yeni Talep: ${inquiry.tour.title}`,
+      subject: `Yeni Talep: ${tourTitle}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <h2 style="color: #1e3a8a;">Yeni Müşteri Talebi</h2>
-          <p><strong>Tur:</strong> ${inquiry.tour.title}</p>
+          <p><strong>İlgilenilen Konu:</strong> ${tourTitle}</p>
           <div style="background-color: #f3f4f6; padding: 16px; border-radius: 8px; margin: 20px 0;">
             <p style="margin: 0 0 10px 0;"><strong>Ad Soyad:</strong> ${inquiry.name}</p>
             <p style="margin: 0 0 10px 0;"><strong>Telefon:</strong> ${inquiry.phone}</p>

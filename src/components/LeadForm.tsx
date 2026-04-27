@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Send, Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { CheckCircle2, Send, Phone, Mail, MapPin, Clock, Loader2 } from 'lucide-react';
+import { createInquiry } from '@/app/actions/inquiry';
 
 const tourOptions = [
   'Ekonomik Umre Paketi','Gümüş Umre Paketi','Altın Umre Paketi','Platin Umre Paketi',
@@ -20,11 +21,48 @@ const contactInfo = [
 export default function LeadForm() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: FormEvent) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    tourPreference: '',
+    date: '',
+    message: ''
+  });
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => { setLoading(false); setSubmitted(true); }, 1500);
+    setError('');
+
+    const combinedMessage = `
+Tur Tercihi: ${formData.tourPreference || 'Belirtilmedi'}
+Planlanan Tarih: ${formData.date || 'Belirtilmedi'}
+Mesaj:
+${formData.message}
+    `.trim();
+
+    try {
+      const res = await createInquiry({
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+        message: combinedMessage,
+      });
+
+      if (res.success) {
+        setSubmitted(true);
+      } else {
+        setError(res.error || 'Bir hata oluştu.');
+      }
+    } catch (err: any) {
+      console.error('Form submission failed:', err);
+      setError('Sunucuya bağlanılamadı. Lütfen tekrar deneyin.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -69,46 +107,53 @@ export default function LeadForm() {
                 </div>
                 <h3 className="font-display text-2xl font-bold text-slate-900 mb-3">Talebiniz Alındı!</h3>
                 <p className="text-slate-500 text-sm max-w-sm">Uzman ekibimiz en kısa sürede sizinle iletişime geçecek.</p>
-                <button onClick={() => setSubmitted(false)} className="mt-6 btn-outline">Yeni Talep Oluştur</button>
+                <button onClick={() => { setSubmitted(false); setFormData({name:'',phone:'',email:'',tourPreference:'',date:'',message:''}); }} className="mt-6 px-6 py-2.5 rounded-xl border-2 border-brand-200 text-brand-700 font-semibold hover:bg-brand-50 transition-colors">Yeni Talep Oluştur</button>
               </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Ad Soyad *</label>
-                    <input type="text" required placeholder="Adınız ve soyadınız" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-400 focus:ring-2 focus:ring-brand-100 outline-none text-sm transition-all placeholder:text-slate-300" />
+                    <input type="text" required value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} placeholder="Adınız ve soyadınız" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-400 focus:ring-2 focus:ring-brand-100 outline-none text-sm transition-all placeholder:text-slate-300" />
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Telefon *</label>
-                    <input type="tel" required placeholder="05XX XXX XX XX" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-400 focus:ring-2 focus:ring-brand-100 outline-none text-sm transition-all placeholder:text-slate-300" />
+                    <input type="tel" required value={formData.phone} onChange={(e) => setFormData({...formData, phone: e.target.value})} placeholder="05XX XXX XX XX" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-400 focus:ring-2 focus:ring-brand-100 outline-none text-sm transition-all placeholder:text-slate-300" />
                   </div>
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">E-posta</label>
-                  <input type="email" placeholder="ornek@email.com" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-400 focus:ring-2 focus:ring-brand-100 outline-none text-sm transition-all placeholder:text-slate-300" />
+                  <input type="email" value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} placeholder="ornek@email.com" className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-400 focus:ring-2 focus:ring-brand-100 outline-none text-sm transition-all placeholder:text-slate-300" />
                 </div>
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Tur Tercihi</label>
-                    <select className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-400 outline-none text-sm text-slate-700">
+                    <select value={formData.tourPreference} onChange={(e) => setFormData({...formData, tourPreference: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-400 outline-none text-sm text-slate-700 bg-white">
                       <option value="">Seçiniz...</option>
                       {tourOptions.map((opt) => <option key={opt} value={opt}>{opt}</option>)}
                     </select>
                   </div>
                   <div>
                     <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Planlanan Tarih</label>
-                    <select className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-400 outline-none text-sm text-slate-700">
+                    <select value={formData.date} onChange={(e) => setFormData({...formData, date: e.target.value})} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-400 outline-none text-sm text-slate-700 bg-white">
                       <option value="">Ay seçin...</option>
-                      {['Nisan 2026','Mayıs 2026','Haziran 2026','Temmuz 2026','Ağustos 2026','Eylül 2026','Ekim 2026'].map((m) => <option key={m}>{m}</option>)}
+                      {['Nisan 2026','Mayıs 2026','Haziran 2026','Temmuz 2026','Ağustos 2026','Eylül 2026','Ekim 2026'].map((m) => <option key={m} value={m}>{m}</option>)}
                     </select>
                   </div>
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Mesajınız</label>
-                  <textarea rows={4} placeholder="Eklemek istediğiniz detaylar, kişi sayısı, özel istekleriniz..." className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-400 outline-none text-sm placeholder:text-slate-300 resize-none" />
+                  <textarea rows={4} value={formData.message} onChange={(e) => setFormData({...formData, message: e.target.value})} placeholder="Eklemek istediğiniz detaylar, kişi sayısı, özel istekleriniz..." className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-brand-400 outline-none text-sm placeholder:text-slate-300 resize-none" />
                 </div>
+                
+                {error && (
+                  <div className="text-sm text-rose-600 bg-rose-50 p-3 rounded-xl border border-rose-200">
+                    {error}
+                  </div>
+                )}
+
                 <motion.button type="submit" disabled={loading} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="w-full flex items-center justify-center gap-2 py-4 rounded-xl bg-brand-700 text-white font-semibold hover:bg-brand-800 transition-colors shadow-lg disabled:opacity-70">
-                  {loading ? (<><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Gönderiliyor...</>) : (<><Send className="w-4 h-4" />Teklif Talep Et</>)}
+                  {loading ? (<><Loader2 className="w-5 h-5 animate-spin" />Gönderiliyor...</>) : (<><Send className="w-4 h-4" />Teklif Talep Et</>)}
                 </motion.button>
               </form>
             )}

@@ -66,7 +66,7 @@ export default async function TaleplerPage() {
                     </td>
                     <td className="px-6 py-4">
                       <span className="inline-flex font-medium text-brand-700 bg-brand-50 px-2.5 py-1 rounded-md">
-                        {inquiry.tour.title}
+                        {inquiry.tour?.title || 'Genel İletişim'}
                       </span>
                     </td>
                     <td className="px-6 py-4">

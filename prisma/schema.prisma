@@ -45,8 +45,8 @@ enum InquiryStatus {
 
 model Inquiry {
   id        Int           @id @default(autoincrement())
-  tourId    Int
-  tour      Tour          @relation(fields: [tourId], references: [id])
+  tourId    Int?
+  tour      Tour?         @relation(fields: [tourId], references: [id])
   name      String
   phone     String
   email     String?
