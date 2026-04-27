@@ -23,7 +23,7 @@ export async function createInquiry(data: {
       message: data.message || undefined,
     };
 
-    if (data.tourId && data.tourId !== undefined && String(data.tourId) !== "") {
+    if (data.tourId && !isNaN(Number(data.tourId))) {
       inquiryData.tour = {
         connect: { id: Number(data.tourId) }
       };
