@@ -77,7 +77,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-end pb-20 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col justify-end pb-32 sm:pb-24 overflow-visible">
       {/* Background Image */}
       <div className="absolute inset-0">
         <Image
@@ -95,7 +95,7 @@ export default function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-28 sm:pt-0">
+      <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pt-28 sm:pt-0">
         <motion.div
           variants={containerVariants}
           initial="hidden"
@@ -139,7 +139,7 @@ export default function Hero() {
           {/* Search Module */}
           <motion.div
             variants={itemVariants}
-            className="bg-white rounded-2xl shadow-2xl p-2 flex flex-col sm:flex-row gap-2 max-w-3xl"
+            className="bg-white opacity-100 rounded-2xl shadow-2xl p-2 flex flex-col sm:flex-row gap-2 max-w-3xl relative z-30 mt-8 sm:mt-0"
           >
             {/* Destination */}
             <div className="flex items-center gap-3 flex-1 px-4 py-3 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer group">
