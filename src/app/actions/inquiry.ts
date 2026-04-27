@@ -16,14 +16,21 @@ export async function createInquiry(data: {
   try {
     console.log('Starting createInquiry with data:', data);
 
+    const inquiryData: any = {
+      name: data.name,
+      phone: data.phone,
+      email: data.email || undefined,
+      message: data.message || undefined,
+    };
+
+    if (data.tourId) {
+      inquiryData.tour = {
+        connect: { id: Number(data.tourId) }
+      };
+    }
+
     const inquiry = await prisma.inquiry.create({
-      data: {
-        tourId: data.tourId ? Number(data.tourId) : undefined,
-        name: data.name,
-        phone: data.phone,
-        email: data.email || undefined,
-        message: data.message || undefined,
-      },
+      data: inquiryData,
       include: {
         tour: true,
       },
