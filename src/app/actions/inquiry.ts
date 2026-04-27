@@ -18,11 +18,11 @@ export async function createInquiry(data: {
 
     const inquiry = await prisma.inquiry.create({
       data: {
-        tourId: data.tourId || null,
+        tourId: data.tourId ? Number(data.tourId) : undefined,
         name: data.name,
         phone: data.phone,
-        email: data.email || null,
-        message: data.message || null,
+        email: data.email || undefined,
+        message: data.message || undefined,
       },
       include: {
         tour: true,
