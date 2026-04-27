@@ -23,7 +23,7 @@ export async function createInquiry(data: {
       message: data.message || undefined,
     };
 
-    if (data.tourId) {
+    if (data.tourId && data.tourId !== undefined && String(data.tourId) !== "") {
       inquiryData.tour = {
         connect: { id: Number(data.tourId) }
       };
@@ -73,6 +73,7 @@ export async function createInquiry(data: {
       console.log('Resend email sent successfully:', resendResponse.data);
     }
 
+    revalidatePath('/admin/talepler');
     return { success: true };
   } catch (error: any) {
     console.error('Failed to create inquiry. Full error:', error);

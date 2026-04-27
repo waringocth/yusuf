@@ -2,6 +2,9 @@ import { getInquiries, updateInquiryStatus } from '@/app/actions/inquiry';
 import { Mail, Phone, Calendar, Search } from 'lucide-react';
 import { revalidatePath } from 'next/cache';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function TaleplerPage() {
   const inquiries = await getInquiries();
 
