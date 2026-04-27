@@ -9,6 +9,7 @@ import LeadForm from '@/components/LeadForm';
 import Footer from '@/components/Footer';
 import StickyContact from '@/components/StickyContact';
 import { getTours } from '@/app/actions/tour';
+import { Suspense } from 'react';
 
 export default async function HomePage() {
   const tours = await getTours();
@@ -19,7 +20,9 @@ export default async function HomePage() {
       <main>
         <Hero />
         <TourCategories />
-        <FeaturedTours initialTours={tours as any} />
+        <Suspense fallback={<div className="py-20 text-center">Turlar yükleniyor...</div>}>
+          <FeaturedTours initialTours={tours as any} />
+        </Suspense>
         <ServicesSection />
         <StatsSection />
         <Testimonials />

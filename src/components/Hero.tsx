@@ -6,6 +6,8 @@ import type { Variants } from 'framer-motion';
 import { motion } from 'framer-motion';
 import { Search, ChevronDown, MapPin, Calendar, Users, ArrowRight, ShieldCheck, Star, Award } from 'lucide-react';
 
+import { useRouter } from 'next/navigation';
+
 const destinations = [
   'Mekke & Medine (Umre)',
   'Mekke & Medine (Hac)',
@@ -16,6 +18,17 @@ const destinations = [
   'Fas Kültür Turu',
   'Ortadoğu Turu',
 ];
+
+const destinationMap: Record<string, string> = {
+  'Mekke & Medine (Umre)': 'umre',
+  'Mekke & Medine (Hac)': 'hac',
+  'İstanbul & Çevresi': 'yurtici',
+  'Kapadokya': 'yurtici',
+  'Balkanlar': 'balkan',
+  'Endülüs & İspanya': 'yurtdisi',
+  'Fas Kültür Turu': 'kultur',
+  'Ortadoğu Turu': 'yurtdisi',
+};
 
 const months = [
   'Nisan 2026', 'Mayıs 2026', 'Haziran 2026', 'Temmuz 2026',
@@ -39,9 +52,29 @@ const itemVariants: Variants = {
 };
 
 export default function Hero() {
+  const router = useRouter();
   const [destination, setDestination] = useState('');
   const [month, setMonth] = useState('');
   const [persons, setPersons] = useState('');
+
+  const handleSearch = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    
+    if (destination && destinationMap[destination]) {
+      params.set('category', destinationMap[destination]);
+    }
+    if (month) {
+      params.set('date', month);
+    }
+    if (persons) {
+      params.set('pax', persons);
+    }
+    
+    const queryString = params.toString();
+    const url = queryString ? `/?${queryString}#turlar` : '/#turlar';
+    router.push(url);
+  };
 
   return (
     <section className="relative min-h-screen flex flex-col justify-end pb-20 overflow-hidden">
@@ -183,15 +216,15 @@ export default function Hero() {
             </div>
 
             {/* Search button */}
-            <motion.a
-              href="#turlar"
+            <motion.button
+              onClick={handleSearch}
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className="flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-brand-700 text-white font-bold text-sm hover:bg-brand-800 transition-colors shadow-lg"
+              className="flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-brand-700 text-white font-bold text-sm hover:bg-brand-800 transition-colors shadow-lg cursor-pointer"
             >
               <Search className="w-4 h-4" />
               <span>Ara</span>
-            </motion.a>
+            </motion.button>
           </motion.div>
 
           {/* Quick links */}
