@@ -23,10 +23,9 @@ export async function createInquiry(data: {
       message: data.message || undefined,
     };
 
+    // Use tourId directly (unchecked input) — avoids Prisma "Argument tour is missing" error
     if (data.tourId && !isNaN(Number(data.tourId))) {
-      inquiryData.tour = {
-        connect: { id: Number(data.tourId) }
-      };
+      inquiryData.tourId = Number(data.tourId);
     }
 
     const inquiry = await prisma.inquiry.create({
