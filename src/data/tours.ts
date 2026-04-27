@@ -3,14 +3,14 @@ export interface Tour {
   slug: string;
   title: string;
   category: 'umre' | 'hac' | 'yurtici' | 'yurtdisi' | 'balkan' | 'kultur';
-  categoryLabel: string;
+  categoryLabel?: string;
   duration: string;
   price: string;
   currency: string;
   date: string;
   seats: number;
   rating: number;
-  reviewCount: number;
+  reviewCount?: number;
   image: string;
   badge?: string;
   highlights: string[];

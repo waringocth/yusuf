@@ -117,7 +117,7 @@ export default function FeaturedTours({ initialTours = [] }: { initialTours?: To
 
                   {/* Category tag */}
                   <span className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-brand-700 text-xs font-semibold px-3 py-1 rounded-full">
-                    {tour.categoryLabel}
+                    {tour.category === 'hac' ? 'Hac' : tour.category === 'umre' ? 'Umre' : tour.category}
                   </span>
                 </div>
 

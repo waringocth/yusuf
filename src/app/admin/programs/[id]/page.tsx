@@ -42,7 +42,7 @@ export default async function EditProgramPage({ params }: PageProps) {
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <EditProgramForm initialData={tour} />
+        <EditProgramForm initialData={tour as any} />
       </div>
     </div>
   );

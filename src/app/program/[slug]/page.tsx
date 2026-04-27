@@ -59,7 +59,7 @@ export default async function ProgramDetail({ params }: PageProps) {
                 </span>
               )}
               <span className="bg-white/20 backdrop-blur-md text-white text-xs font-semibold px-3 py-1 rounded-full">
-                {tour.categoryLabel}
+                {tour.category === 'hac' ? 'Hac' : tour.category === 'umre' ? 'Umre' : tour.category}
               </span>
             </div>
             

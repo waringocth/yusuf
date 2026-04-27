@@ -56,7 +56,7 @@ export default async function AdminProgramsPage() {
                         ? 'bg-amber-100 text-amber-800' 
                         : 'bg-emerald-100 text-emerald-800'
                     }`}>
-                      {tour.categoryLabel}
+                      {tour.category === 'hac' ? 'Hac' : tour.category === 'umre' ? 'Umre' : tour.category}
                     </span>
                   </td>
                   <td className="px-6 py-4 font-medium text-slate-900">
