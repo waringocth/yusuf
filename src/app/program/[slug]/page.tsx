@@ -2,10 +2,34 @@ import { getTourBySlug } from '@/app/actions/tour';
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
+import InquiryForm from '@/components/InquiryForm';
 import { ArrowLeft, ArrowRight, Star, Clock, Calendar, Users, Flame, CheckCircle, XCircle, MapPin, Info } from 'lucide-react';
+import { Metadata } from 'next';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const tour = await getTourBySlug(slug);
+
+  if (!tour) {
+    return {
+      title: 'Tur Bulunamadı | Kılınç Turizm',
+      description: 'Aradığınız tur programı bulunamadı.',
+    };
+  }
+
+  return {
+    title: `${tour.title} | Kılınç Turizm`,
+    description: tour.description.substring(0, 160),
+    openGraph: {
+      title: `${tour.title} | Kılınç Turizm`,
+      description: tour.description.substring(0, 160),
+      images: [tour.image],
+    },
+  };
 }
 
 export default async function ProgramDetail({ params }: PageProps) {
@@ -246,17 +270,9 @@ export default async function ProgramDetail({ params }: PageProps) {
                 </div>
               </div>
 
-              <Link 
-                href="/#iletisim" 
-                className="flex items-center justify-center gap-2 w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold text-lg px-6 py-4 rounded-full transition-all shadow-lg shadow-brand-700/20 hover:-translate-y-0.5"
-              >
-                Hemen İletişime Geç
-                <ArrowRight className="w-5 h-5" />
-              </Link>
-              
-              <p className="text-center text-slate-400 text-xs mt-4">
-                Ön kayıt oluşturmak için hiçbir ücret talep edilmez.
-              </p>
+              <div className="mt-8 -mx-8 -mb-8 px-8 pb-8">
+                <InquiryForm tourId={tour.id} />
+              </div>
             </div>
           </div>
         </div>

@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Map, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Map, Settings, LogOut, MessageSquare } from 'lucide-react';
 
 export default function AdminSidebar() {
   const pathname = usePathname();
@@ -10,6 +10,7 @@ export default function AdminSidebar() {
   const links = [
     { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
     { href: '/admin/programs', label: 'Programlar', icon: Map },
+    { href: '/admin/talepler', label: 'Talepler', icon: MessageSquare },
     { href: '/admin/settings', label: 'Ayarlar', icon: Settings },
   ];
 
